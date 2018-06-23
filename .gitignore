@@ -1,0 +1,7 @@
+*proj.*
+cocosstudio
+bin
+*.ccs
+*.cfg
+*.udf
+config.json
