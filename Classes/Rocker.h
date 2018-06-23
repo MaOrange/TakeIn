@@ -45,6 +45,14 @@ protected:
 	Sprite * rockerBg;
 
 	int D;
+
+	float originX=0.2;
+
+	float originY = 0.3;
+
+	Size size;
+
+	float angle;
 };
 
 

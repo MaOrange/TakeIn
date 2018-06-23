@@ -21,7 +21,7 @@ Rocker* Rocker::createWith(const char * rockerDotName, const char * rockerBgName
 
 void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 {
-	auto size = Director::getInstance()->getVisibleSize();
+	size = Director::getInstance()->getVisibleSize();
 
 	int width = size.width;
 
@@ -75,7 +75,7 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 
 float Rocker::getDiretionByRad() const
 {
-	return 0.0f;
+	return angle;
 }
 
 float Rocker::getDirectionByTheta() const
@@ -110,8 +110,6 @@ bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
 
 		rockerDot->setOpacity(200);
 
-		rockerDir->setOpacity(200);
-
 		CCLOG("onTouchBegin returned true! location:%d",delataLocation);
 
 		return true;
@@ -123,25 +121,44 @@ bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
 void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 {
 	auto location =  touch->getLocation();
-	CCLOG("onTouchMovedCB called the location:x:%f, y:%f",location.x,location.y);
+	//CCLOG("onTouchMovedCB called the location:x:%f, y:%f",location.x,location.y);
+	rockerDir->setOpacity(200);
+	rockerDir->setRotation(-angle*180/3.14159f);
+	rockerDot->setPosition(locationTranslate(location));
 }
 
 void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 {
+	rockerDot->setOpacity(180);
+
+	rockerBg->setOpacity(235);//bg is already 
+
+	rockerDir->setOpacity(0);
+
+	rockerDot->setPosition(Vec2(size.width*originX,size.height*originY));
 }
 
 Vec2 Rocker::locationTranslate(const Vec2 & location)
 {
-	float dis = sqrt(pow(location.x,2)+pow(location.y,2));
+	auto origin = Vec2(size.width*originX,size.height*originY);
 
+	auto delta = location- origin;
+
+	float dis = delta.length();
+	angle = delta.getAngle();
 	if (dis > D / 2)
 	{
-		return Vec2(location.x / dis*D / 2, location.y/dis*D/2);
+		//delta = Vec2(delta.x / dis*D / 2, delta.y/dis*D/2);
+		delta *= D/2/dis;
+		CCLOG("the angle for delta:%f",delta.getAngle());
+		
 	}
 	else
 	{
 		return location;
 	}
 
-	return Vec2(0,0);//impossible
+	//auto newLocation = origin + delta;
+
+	return (origin + delta);
 }
