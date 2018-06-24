@@ -116,15 +116,7 @@ Vec2 Rocker::getRockerPosition() const
 
 void Rocker::setRockerPosition(Vec2 newLocation)
 {
-	originX = newLocation.x;
-
-	originY = newLocation.y;
-
-	rockerBg->setPosition(Vec2(size.width*originX, size.height*originY));
-
-	rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
-
-	rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
+	
 }
 
 void Rocker::setRockerPosition(float x,float y)
@@ -138,6 +130,10 @@ void Rocker::setRockerPosition(float x,float y)
 	rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
 
 	rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
+
+	rockerStart->setPosition(Vec2(size.width*originX, size.height*originY));
+
+	rockerDisabled->setPosition(Vec2(size.width*originX, size.height*originY));
 }
 
 void Rocker::setEnabled(bool able)
@@ -152,14 +148,16 @@ void Rocker::setEnabled(bool able)
 		{
 			enabled = false;
 			rockerDisabled->setOpacity(190);
-			dispatcher->removeEventListener(listener);
+			//dispatcher->removeEventListener(listener);
+			listener->setEnabled(false);
 			onTouchEndedCB(nullptr,nullptr);
 		} 
 		else
 		{
 			enabled = true;
 			rockerDisabled->setOpacity(0);
-			dispatcher->addEventListenerWithSceneGraphPriority(listener,rockerDot);
+			//dispatcher->addEventListenerWithSceneGraphPriority(listener,rockerDot);
+			listener->setEnabled(true);
 		}
 	}
 }
@@ -207,7 +205,7 @@ void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 		rockerStart->runAction(FadeTo::create(0.1, 0));
 	}
 
-	rockerDir->setRotation(-angle*180/3.14159f);
+	rockerDir->setRotation(-CC_RADIANS_TO_DEGREES(angle));
 	rockerDot->setPosition(locationTranslate(location));
 }
 
