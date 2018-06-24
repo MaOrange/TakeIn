@@ -6,3 +6,4 @@ bin
 *.udf
 config.json
 *.json
+*.apk
