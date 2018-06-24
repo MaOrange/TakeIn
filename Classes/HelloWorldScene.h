@@ -9,6 +9,13 @@ public:
     static cocos2d::Scene* createScene();
     virtual bool init();
     CREATE_FUNC(HelloWorld);
+
+	void MenuCB(Ref * sender);
+
+protected:
+	Rocker * newLayer;
+
+	Size size;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

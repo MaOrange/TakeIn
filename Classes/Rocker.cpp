@@ -39,24 +39,48 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 
 	rockerDir = direction;
 
+	Sprite * start = Sprite::create("rockerStart.png");
+
+	rockerStart = start;
+
+	Sprite * disabled = Sprite::create("rockerDisabled.png");
+
+	rockerDisabled = disabled;
+
+	//set position
 	dot->setPosition(Vec2(width*originX,height*originY));
 
 	bg->setPosition(Vec2(width*originX, height*originY));
 
 	direction->setPosition(Vec2(width*originX, height*originY));
 
+	start->setPosition(Vec2(width*originX, height*originY));
+
+	disabled->setPosition(Vec2(width*originX, height*originY));
+
+	//set setOpacity
 	dot->setOpacity(180);
 
 	bg->setOpacity(180);//bg is already 
 
 	direction->setOpacity(0);
 
+	rockerStart->setOpacity(0);
+
+	disabled->setOpacity(0);
+
+	//add to this
 	this->addChild(dot,2,tag_dot);
 
 	this->addChild(bg,0,tag_bg);
 
 	this->addChild(direction,1,tag_dir);
 
+	this->addChild(start, 1, tag_start);
+
+	this->addChild(disabled,3,tag_disabled);
+
+	//new listener
 	auto newListener = EventListenerTouchOneByOne::create();
 
 	newListener->setSwallowTouches(true);//swallow enabled
@@ -66,6 +90,8 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 	newListener->onTouchMoved = CC_CALLBACK_2(Rocker::onTouchMovedCB, this);
 
 	newListener->onTouchEnded = CC_CALLBACK_2(Rocker::onTouchEndedCB, this);
+
+	listener = newListener;
 
 	Director::getInstance()->getEventDispatcher()
 		->addEventListenerWithSceneGraphPriority(newListener, rockerDot);//this
@@ -80,19 +106,68 @@ float Rocker::getDiretionByRad() const
 
 float Rocker::getDirectionByTheta() const
 {
-	return 0.0f;
+	return CC_RADIANS_TO_DEGREES(angle);
 }
 
-void Rocker::getRockerPosition() const
+Vec2 Rocker::getRockerPosition() const
 {
-
+	return Vec2(size.width*originX,size.height);
 }
 
-void Rocker::setRockerPosition()
+void Rocker::setRockerPosition(Vec2 newLocation)
 {
+	originX = newLocation.x;
 
+	originY = newLocation.y;
+
+	rockerBg->setPosition(Vec2(size.width*originX, size.height*originY));
+
+	rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
+
+	rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
 }
 
+void Rocker::setRockerPosition(float x,float y)
+{
+	originX = x;
+
+	originY = y;
+
+	rockerBg->setPosition(Vec2(size.width*originX, size.height*originY));
+
+	rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
+
+	rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
+}
+
+void Rocker::setEnabled(bool able)
+{
+	if (able == enabled)
+	{
+
+	}
+	else
+	{
+		if (enabled == true)
+		{
+			enabled = false;
+			rockerDisabled->setOpacity(190);
+			dispatcher->removeEventListener(listener);
+			onTouchEndedCB(nullptr,nullptr);
+		} 
+		else
+		{
+			enabled = true;
+			rockerDisabled->setOpacity(0);
+			dispatcher->addEventListenerWithSceneGraphPriority(listener,rockerDot);
+		}
+	}
+}
+
+bool Rocker::getEnabled() const
+{
+	return enabled;
+}
 
 
 bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
@@ -104,11 +179,13 @@ bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
 
 	Rect rect = Rect(0,0,s.width,s.height);
 
-	if (rect.containsPoint(delataLocation))
+	if (rect.containsPoint(delataLocation) && enabled)
 	{
 		rockerBg->setOpacity(255);
 
 		rockerDot->setOpacity(200);
+
+		rockerStart->setOpacity(180);
 
 		CCLOG("onTouchBegin returned true! location:%d",delataLocation);
 
@@ -123,6 +200,13 @@ void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 	auto location =  touch->getLocation();
 	//CCLOG("onTouchMovedCB called the location:x:%f, y:%f",location.x,location.y);
 	rockerDir->setOpacity(200);
+
+	//rockerStart->setOpacity(0);
+	if (rockerStart->getNumberOfRunningActions() == 0)
+	{
+		rockerStart->runAction(FadeTo::create(0.1, 0));
+	}
+
 	rockerDir->setRotation(-angle*180/3.14159f);
 	rockerDot->setPosition(locationTranslate(location));
 }
@@ -133,7 +217,11 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 
 	rockerBg->setOpacity(220);//bg is already 
 
-	rockerDir->setOpacity(0);
+	//rockerDir->setOpacity(0);
+	rockerDir->runAction(FadeTo::create(0.2, 0));
+
+	//rockerStart->setOpacity(0);
+	rockerStart->runAction(FadeTo::create(0.1,0));
 
 	rockerDot->setPosition(Vec2(size.width*originX,size.height*originY));
 }
