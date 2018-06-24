@@ -47,7 +47,7 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 
 	dot->setOpacity(180);
 
-	bg->setOpacity(235);//bg is already 
+	bg->setOpacity(180);//bg is already 
 
 	direction->setOpacity(0);
 
@@ -131,7 +131,7 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 {
 	rockerDot->setOpacity(180);
 
-	rockerBg->setOpacity(235);//bg is already 
+	rockerBg->setOpacity(220);//bg is already 
 
 	rockerDir->setOpacity(0);
 
