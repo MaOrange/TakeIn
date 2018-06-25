@@ -1,21 +1,24 @@
 #pragma once
+
+
+
+#ifndef ROCKER
+#define ROCKER
 #include<cocos2d.h>
 USING_NS_CC;
-
-
 typedef enum
 {
-	tag_dot, tag_bg, tag_dir,tag_start,tag_disabled
+	tag_dot, tag_bg, tag_dir, tag_start, tag_disabled
 }tagForRocker;
 
-class Rocker:public Layer
+class Rocker :public Layer
 {
 public:
-    Rocker();
+	Rocker();
 
 	CREATE_FUNC(Rocker);
 
-	static Rocker* createWith(const char *rockerDotName,const char * rockerBgName);
+	static Rocker* createWith(const char *rockerDotName, const char * rockerBgName);
 
 	float getDiretionByRad() const;//return the direction in normal system in the unit of rad
 
@@ -30,6 +33,10 @@ public:
 	void setEnabled(bool);
 
 	bool getEnabled()const;
+
+	float getDistance() const;
+
+	float getRockerR() const;
 
 protected:
 	void initWith(const char *rockerDotName, const char * rockerBgName);
@@ -56,7 +63,7 @@ protected:
 
 	int D;
 
-	float originX=0.2;
+	float originX = 0.2;
 
 	float originY = 0.3;
 
@@ -66,7 +73,11 @@ protected:
 
 	bool enabled = true;
 
-	EventDispatcher* dispatcher=Director::getInstance()->getEventDispatcher();
+	EventDispatcher* dispatcher = Director::getInstance()->getEventDispatcher();
+
+	float Distance;
 };
 
+
+#endif // !ROCKER
 

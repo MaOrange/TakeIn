@@ -167,6 +167,17 @@ bool Rocker::getEnabled() const
 	return enabled;
 }
 
+float Rocker::getDistance() const
+{
+
+	return Distance;
+}
+
+float Rocker::getRockerR() const
+{
+	return rockerBg->getContentSize().width;
+}
+
 
 bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
 {
@@ -232,6 +243,7 @@ Vec2 Rocker::locationTranslate(const Vec2 & location)
 
 	float dis = delta.length();
 	angle = delta.getAngle();
+	Distance = delta.getLength();
 	if (dis > D / 2)
 	{
 		//delta = Vec2(delta.x / dis*D / 2, delta.y/dis*D/2);
