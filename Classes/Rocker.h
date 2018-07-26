@@ -11,6 +11,8 @@ typedef enum
 	tag_dot, tag_bg, tag_dir, tag_start, tag_disabled
 }tagForRocker;
 
+typedef  std::function<void(Vec2&)> rockerOnChangeHandler;
+
 class Rocker :public Layer
 {
 public:
@@ -37,6 +39,12 @@ public:
 	float getDistance() const;
 
 	float getRockerR() const;
+
+	//rockerOnChangeHandle rockerOnChange=nullptr;
+
+	rockerOnChangeHandler rockerOnChange=nullptr;
+
+	void setCallBack(rockerOnChangeHandler handle);
 
 protected:
 	void initWith(const char *rockerDotName, const char * rockerBgName);
@@ -76,6 +84,8 @@ protected:
 	EventDispatcher* dispatcher = Director::getInstance()->getEventDispatcher();
 
 	float Distance;
+
+	Vec2 delta;
 };
 
 

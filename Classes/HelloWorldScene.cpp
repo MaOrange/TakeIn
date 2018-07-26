@@ -28,6 +28,8 @@ bool HelloWorld::init()
 
 	newLayer = Rocker::createWith("","");
 
+	newLayer->setCallBack(std::bind(&HelloWorld::rockerCB, this, std::placeholders::_1));
+
 	this->addChild(newLayer);
 
 	this->addChild(bgLayer,-1);
@@ -81,3 +83,10 @@ void HelloWorld::MenuCB(Ref * sender)
 	}
 
 }
+
+void HelloWorld::rockerCB(Vec2 & rockerInfo)
+{
+	CCLOG("rockerCB: angle:%f  length:%f",rockerInfo.getAngle(),rockerInfo.getLength());
+}
+
+

@@ -3,6 +3,9 @@
 
 #include "cocos2d.h"
 #include "Rocker.h"
+
+
+
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -11,6 +14,8 @@ public:
     CREATE_FUNC(HelloWorld);
 
 	void MenuCB(Ref * sender);
+
+	void rockerCB(Vec2 & rockerInfo);
 
 protected:
 	Rocker * newLayer;

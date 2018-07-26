@@ -196,7 +196,7 @@ bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
 
 		rockerStart->setOpacity(180);
 
-		CCLOG("onTouchBegin returned true! location:%d",delataLocation);
+		//CCLOG("onTouchBegin returned true! location:%d",delataLocation);
 
 		return true;
 	}
@@ -211,10 +211,12 @@ void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 	rockerDir->setOpacity(200);
 
 	//rockerStart->setOpacity(0);
-	if (rockerStart->getNumberOfRunningActions() == 0)
+	if (rockerStart->getOpacity()==0 && rockerStart->getNumberOfRunningActions() == 0)
 	{
 		rockerStart->runAction(FadeTo::create(0.1, 0));
 	}
+
+
 
 	rockerDir->setRotation(-CC_RADIANS_TO_DEGREES(angle));
 	rockerDot->setPosition(locationTranslate(location));
@@ -233,22 +235,35 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 	rockerStart->runAction(FadeTo::create(0.1,0));
 
 	rockerDot->setPosition(Vec2(size.width*originX,size.height*originY));
+
+
+	delta = Vec2::ZERO;
+	if (rockerOnChange)
+	{
+		rockerOnChange(delta);
+	}
 }
 
 Vec2 Rocker::locationTranslate(const Vec2 & location)
 {
 	auto origin = Vec2(size.width*originX,size.height*originY);
 
-	auto delta = location- origin;
+	delta = location- origin;
 
 	float dis = delta.length();
 	angle = delta.getAngle();
 	Distance = delta.getLength();
+
+	if (rockerOnChange)
+	{
+		rockerOnChange(delta);
+	}
+
 	if (dis > D / 2)
 	{
 		//delta = Vec2(delta.x / dis*D / 2, delta.y/dis*D/2);
 		delta *= D/2/dis;
-		CCLOG("the angle for delta:%f",delta.getAngle());
+		//CCLOG("the angle for delta:%f",delta.getAngle());
 		
 	}
 	else
@@ -259,4 +274,9 @@ Vec2 Rocker::locationTranslate(const Vec2 & location)
 	//auto newLocation = origin + delta;
 
 	return (origin + delta);
+}
+
+void Rocker::setCallBack(rockerOnChangeHandler handle)
+{
+	rockerOnChange = handle;
 }
