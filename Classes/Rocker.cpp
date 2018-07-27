@@ -1,5 +1,7 @@
 #include "Rocker.h"
 
+Sprite* SkillRocker::_cancel = nullptr;
+
 Rocker::Rocker() {
 	
 }
@@ -33,19 +35,19 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 
 	Sprite * bg = Sprite::create(rockerBgName);
 
-	rockerBg = bg;
+	_rockerBg = bg;
 
 	Sprite * direction = Sprite::create("rockerDir.png");
 
-	rockerDir = direction;
+	_rockerDir = direction;
 
 	Sprite * start = Sprite::create("rockerStart.png");
 
-	rockerStart = start;
+	_rockerStart = start;
 
 	Sprite * disabled = Sprite::create("rockerDisabled.png");
 
-	rockerDisabled = disabled;
+	_rockerDisabled = disabled;
 
 	//set position
 	dot->setPosition(Vec2(width*originX,height*originY));
@@ -65,7 +67,7 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 
 	direction->setOpacity(0);
 
-	rockerStart->setOpacity(0);
+	_rockerStart->setOpacity(0);
 
 	disabled->setOpacity(0);
 
@@ -125,15 +127,15 @@ void Rocker::setRockerPosition(float x,float y)
 
 	originY = y;
 
-	rockerBg->setPosition(Vec2(size.width*originX, size.height*originY));
+	_rockerBg->setPosition(Vec2(size.width*originX, size.height*originY));
 
 	_rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
 
-	rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
+	_rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
 
-	rockerStart->setPosition(Vec2(size.width*originX, size.height*originY));
+	_rockerStart->setPosition(Vec2(size.width*originX, size.height*originY));
 
-	rockerDisabled->setPosition(Vec2(size.width*originX, size.height*originY));
+	_rockerDisabled->setPosition(Vec2(size.width*originX, size.height*originY));
 }
 
 void Rocker::setEnabled(bool able)
@@ -147,7 +149,7 @@ void Rocker::setEnabled(bool able)
 		if (enabled == true)
 		{
 			enabled = false;
-			rockerDisabled->setOpacity(190);
+			_rockerDisabled->setOpacity(190);
 			//dispatcher->removeEventListener(listener);
 			listener->setEnabled(false);
 			onTouchEndedCB(nullptr,nullptr);
@@ -155,7 +157,7 @@ void Rocker::setEnabled(bool able)
 		else
 		{
 			enabled = true;
-			rockerDisabled->setOpacity(0);
+			_rockerDisabled->setOpacity(0);
 			//dispatcher->addEventListenerWithSceneGraphPriority(listener,rockerDot);
 			listener->setEnabled(true);
 		}
@@ -175,7 +177,7 @@ float Rocker::getDistance() const
 
 float Rocker::getRockerR() const
 {
-	return rockerBg->getContentSize().width;
+	return _rockerBg->getContentSize().width;
 }
 
 
@@ -190,11 +192,11 @@ bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
 
 	if (rect.containsPoint(delataLocation) && enabled)
 	{
-		rockerBg->setOpacity(150);
+		_rockerBg->setOpacity(150);
 
 		_rockerDot->setOpacity(200);
 
-		rockerStart->setOpacity(180);
+		_rockerStart->setOpacity(180);
 
 		//CCLOG("onTouchBegin returned true! location:%d",delataLocation);
 
@@ -208,17 +210,17 @@ void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 {
 	auto location =  touch->getLocation();
 	//CCLOG("onTouchMovedCB called the location:x:%f, y:%f",location.x,location.y);
-	rockerDir->setOpacity(200);
+	_rockerDir->setOpacity(200);
 
 	//rockerStart->setOpacity(0);
-	if (rockerStart->getOpacity()!=0 && rockerStart->getNumberOfRunningActions() == 0)
+	if (_rockerStart->getOpacity()!=0 && _rockerStart->getNumberOfRunningActions() == 0)
 	{
-		rockerStart->runAction(FadeTo::create(0.1, 0));
+		_rockerStart->runAction(FadeTo::create(0.1, 0));
 	}
 
 
 
-	rockerDir->setRotation(-CC_RADIANS_TO_DEGREES(angle));
+	_rockerDir->setRotation(-CC_RADIANS_TO_DEGREES(angle));
 	_rockerDot->setPosition(locationTranslate(location));
 }
 
@@ -226,13 +228,13 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 {
 	_rockerDot->setOpacity(180);
 
-	rockerBg->setOpacity(90);//bg is already 
+	_rockerBg->setOpacity(90);//bg is already 
 
 	//rockerDir->setOpacity(0);
-	rockerDir->runAction(FadeTo::create(0.2, 0));
+	_rockerDir->runAction(FadeTo::create(0.2, 0));
 
 	//rockerStart->setOpacity(0);
-	rockerStart->runAction(FadeTo::create(0.1,0));
+	_rockerStart->runAction(FadeTo::create(0.1,0));
 
 	_rockerDot->setPosition(Vec2(size.width*originX,size.height*originY));
 
@@ -279,4 +281,137 @@ Vec2 Rocker::locationTranslate(const Vec2 & location)
 void Rocker::setCallBack(rockerOnChangeHandler handle)
 {
 	rockerOnChange = handle;
+}
+
+SkillRocker* SkillRocker::createWith(const char * fileName)
+{
+	auto newNode = SkillRocker::create();
+
+	if (!(newNode->initWith(_SKILLICON)))
+	{
+		//?delete newNode?
+		return nullptr;
+	}
+
+	return newNode;
+}
+
+bool SkillRocker::initWith(const char * fileName)
+{
+	if (!Rocker::init())
+	{
+		return false;
+	}
+	//got a rocker, going to modify the rokcer into skill rocker
+	//DOt
+	this->_rockerDot->setVisible(false);
+	this->_rockerBg->setVisible(false);
+
+	//_CDIndicator
+	_CDIndicator = Sprite::create(_CDINDICATOR);
+	_CDIndicator->setVisible(false);
+	_CDIndicator->setPosition(Point::ZERO);
+	this->addChild(_CDIndicator,5);
+
+	//
+	_CDDemostrate = ControlPotentiometer::create(_SKILLCD,_SKILLICON,"null.png");
+	_CDDemostrate->setEnabled(false);
+	_CDDemostrate->setMinimumValue(0);
+	_CDDemostrate->setMaximumValue(1);
+	_CDDemostrate->setValue(1);//init the cd ready 
+	_CDDemostrate->setPosition(Point::ZERO);
+	this->addChild(_CDDemostrate);
+
+	//Class level init static _cancel  single instance
+	if (!_cancel)
+	{
+		_cancel = Sprite::create(_CANCEL);
+		_cancel->setPosition(Vec2(_CANCEL_X, _CANCEL_Y));
+		_cancel->setGlobalZOrder(100);//
+		_cancel->setVisible(false);
+		this->addChild(_cancel);
+	} 
+	
+	return true;
+}
+
+bool SkillRocker::getIsEnable()
+{
+	return isEnable;
+}
+
+bool SkillRocker::getIsNoPower()
+{
+	return isNoPower;
+}
+
+bool SkillRocker::onTouchBeginCB(Touch * touch, Event * event)
+{
+	//relative location
+	auto delataLocation = _rockerDot->convertToNodeSpace(touch->getLocation());
+
+	Size s = _rockerDot->getContentSize();
+
+	Rect rect = Rect(0, 0, s.width, s.height);
+
+	if (rect.containsPoint(delataLocation) && isEnable && !isNoPower)
+	{
+		_rockerDot->setVisible(true);
+
+		CCLOG("SkillRocker::onTouchBegin returned true! location:%d",delataLocation);
+
+		return true;
+	}
+
+	return false;
+}
+
+void SkillRocker::onTouchMovedCB(Touch * touch, Event * event)
+{
+	auto location = touch->getLocation();
+	//CCLOG("onTouchMovedCB called the location:x:%f, y:%f",location.x,location.y);
+
+
+	_rockerDot->setPosition(locationTranslate(location));
+}
+
+void SkillRocker::onTouchEndedCB(Touch * touch, Event * event)
+{
+	auto delataLocation = _cancel->convertToNodeSpace(touch->getLocation());
+
+	Size s = _cancel->getContentSize();
+
+	Rect rect = Rect(0, 0, s.width, s.height);
+
+	if (rect.containsPoint(delataLocation))
+	{
+		CCLOG("SKill cancel!");
+	}
+	else//skill didn't cancel
+	{
+		_rockerDot->setVisible(false);
+
+		_rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
+
+		deltaPrev = delta;
+
+		OnSkillTriger(&deltaPrev);
+
+		//inherit
+		delta = Vec2::ZERO;
+		if (rockerOnChange)
+		{
+			rockerOnChange(delta);
+		}
+		
+	}
+
+
+}
+
+void SkillRocker::OnSkillTriger(void * skillInfo)
+{
+	OnSkillTrigerCallBack(skillInfo);
+	//other thing to handle
+	CCLOG("OnSKillTriger!");
 }

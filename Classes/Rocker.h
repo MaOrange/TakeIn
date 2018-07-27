@@ -13,10 +13,13 @@ USING_NS_CC;
 #define _ROCKERDIR "rockerDir.png"
 #define _ROCKERDISABELD "rockerDisabled.png"
 #define _ROCKERSTART "rockerStart.png"
-#define _CANCEL "cancel.png"
 #define _SKILLICON "SKillIcon.png"
 #define _SKILLCD "SkillCD.png"
 #define _CDINDICATOR "CDIndicator.png"
+
+#define _CANCEL "cancel.png"
+#define  _CANCEL_X 0.8f
+#define _CANCEL_Y 0.8f
 
 
 typedef enum
@@ -61,7 +64,7 @@ public:
 	void setCallBack(rockerOnChangeHandler handle);
 
 protected:
-	void initWith(const char *rockerDotName, const char * rockerBgName);
+	virtual void initWith(const char *rockerDotName, const char * rockerBgName);
 
 	virtual bool onTouchBeginCB(Touch * touch, Event * event);
 
@@ -75,13 +78,13 @@ protected:
 
 	Sprite * _rockerDot;
 
-	Sprite * rockerDir;
+	Sprite * _rockerDir;
 
-	Sprite * rockerBg;
+	Sprite * _rockerBg;
 
-	Sprite * rockerStart;
+	Sprite * _rockerStart;
 
-	Sprite * rockerDisabled;
+	Sprite * _rockerDisabled;
 
 	int D;
 
@@ -107,16 +110,16 @@ protected:
 #include "cocos-ext.h"
 USING_NS_CC_EXT;
 
-typedef  std::function<void()> SkillRockerCallBackHandle;
+typedef  std::function<void(void*)> SkillRockerCallBackHandle;
 
 class SkillRocker :public Rocker
 {
 public:
 	CREATE_FUNC(SkillRocker);
 
-	void createWith(const char * fileName);
+	static SkillRocker* createWith(const char * fileName);
 
-	void initWith(const char * fileName);
+	bool initWith(const char * fileName);
 
 	void setIsEnable();
 	bool getIsEnable();
@@ -134,6 +137,8 @@ public:
 
 	static Sprite* _cancel;
 
+	Vec2 deltaPrev;//to save the prev delta value to be passed by ptr to skillInfo
+
 protected:
 	float CD=0;
 
@@ -149,7 +154,7 @@ protected:
 
 	Sprite* _CDIndicator;
 
-	ControlPotentiometer* _CDdemostrate;
+	ControlPotentiometer* _CDDemostrate;
 
 	virtual bool onTouchBeginCB(Touch * touch, Event * event)override;
 
@@ -159,11 +164,13 @@ protected:
 
 	void OnCDReady();
 
-	SkillRockerCallBackHandle OnCDReadyCallBack;
-
 	SkillRockerCallBackHandle OnCDStartCallBack;
 
 	SkillRockerCallBackHandle OnSkillTrigerCallBack;
+
+	void OnSkillTriger(void * skillInfo);
+
+
 
 };
 
