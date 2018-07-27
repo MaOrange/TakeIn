@@ -9,7 +9,7 @@ Rocker* Rocker::createWith(const char * rockerDotName, const char * rockerBgName
 	Rocker * newRocker = Rocker::create();
 	if (newRocker)
 	{
-		newRocker->initWith(rockerDotName, rockerBgName);
+		newRocker->initWith("Rocker.png", "RockerBG.png");
 		return newRocker;
 	}
 	else 
@@ -27,11 +27,11 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 
 	int height = size.height;
 
-	Sprite * dot = Sprite::create("rocker.png");
+	Sprite * dot = Sprite::create(rockerDotName);
 
-	rockerDot = dot;
+	_rockerDot = dot;
 
-	Sprite * bg = Sprite::create("rockerBG.png");
+	Sprite * bg = Sprite::create(rockerBgName);
 
 	rockerBg = bg;
 
@@ -61,7 +61,7 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 	//set setOpacity
 	dot->setOpacity(180);
 
-	bg->setOpacity(180);//bg is already 
+	bg->setOpacity(90);//bg is already 
 
 	direction->setOpacity(0);
 
@@ -94,7 +94,7 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 	listener = newListener;
 
 	Director::getInstance()->getEventDispatcher()
-		->addEventListenerWithSceneGraphPriority(newListener, rockerDot);//this
+		->addEventListenerWithSceneGraphPriority(newListener, _rockerDot);//this
 
 	D = bg->getContentSize().width;
 }
@@ -127,7 +127,7 @@ void Rocker::setRockerPosition(float x,float y)
 
 	rockerBg->setPosition(Vec2(size.width*originX, size.height*originY));
 
-	rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
+	_rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
 
 	rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
 
@@ -182,17 +182,17 @@ float Rocker::getRockerR() const
 bool Rocker::onTouchBeginCB(Touch * touch, Event * event)
 {
 	//relative location
-	auto delataLocation = rockerDot->convertToNodeSpace(touch->getLocation());
+	auto delataLocation = _rockerDot->convertToNodeSpace(touch->getLocation());
 
-	Size s = rockerDot->getContentSize();
+	Size s = _rockerDot->getContentSize();
 
 	Rect rect = Rect(0,0,s.width,s.height);
 
 	if (rect.containsPoint(delataLocation) && enabled)
 	{
-		rockerBg->setOpacity(255);
+		rockerBg->setOpacity(150);
 
-		rockerDot->setOpacity(200);
+		_rockerDot->setOpacity(200);
 
 		rockerStart->setOpacity(180);
 
@@ -211,7 +211,7 @@ void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 	rockerDir->setOpacity(200);
 
 	//rockerStart->setOpacity(0);
-	if (rockerStart->getOpacity()==0 && rockerStart->getNumberOfRunningActions() == 0)
+	if (rockerStart->getOpacity()!=0 && rockerStart->getNumberOfRunningActions() == 0)
 	{
 		rockerStart->runAction(FadeTo::create(0.1, 0));
 	}
@@ -219,14 +219,14 @@ void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 
 
 	rockerDir->setRotation(-CC_RADIANS_TO_DEGREES(angle));
-	rockerDot->setPosition(locationTranslate(location));
+	_rockerDot->setPosition(locationTranslate(location));
 }
 
 void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 {
-	rockerDot->setOpacity(180);
+	_rockerDot->setOpacity(180);
 
-	rockerBg->setOpacity(220);//bg is already 
+	rockerBg->setOpacity(90);//bg is already 
 
 	//rockerDir->setOpacity(0);
 	rockerDir->runAction(FadeTo::create(0.2, 0));
@@ -234,7 +234,7 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 	//rockerStart->setOpacity(0);
 	rockerStart->runAction(FadeTo::create(0.1,0));
 
-	rockerDot->setPosition(Vec2(size.width*originX,size.height*originY));
+	_rockerDot->setPosition(Vec2(size.width*originX,size.height*originY));
 
 
 	delta = Vec2::ZERO;
