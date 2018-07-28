@@ -21,6 +21,8 @@ protected:
 	Rocker * newNode;
 
 	Size size;
+
+	SkillRocker* newSkill;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

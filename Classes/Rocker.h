@@ -22,6 +22,12 @@ USING_NS_CC;
 #define _CANCEL_Y 0.8f
 
 
+struct SkillInfo
+{
+	Vec2 direction;
+
+};
+
 typedef enum
 {
 	tag_dot, tag_bg, tag_dir, tag_start, tag_disabled
@@ -58,7 +64,7 @@ public:
 	void setCallBack(rockerOnChangeHandler handle);
 
 protected:
-	virtual void initWith(const char *rockerDotName, const char * rockerBgName);
+	virtual bool initWith(const char *rockerDotName, const char * rockerBgName);
 
 	virtual bool onTouchBeginCB(Touch * touch, Event * event);
 
@@ -95,12 +101,14 @@ protected:
 	Vec2 delta;
 
 	static Sprite* _cancel;
+
+	SkillInfo skillInfoPrev;
 };
 
 #include "cocos-ext.h"
 USING_NS_CC_EXT;
 
-typedef  std::function<void(void*)> SkillRockerCallBackHandle;
+typedef  std::function<void(SkillInfo*)> SkillRockerCallBackHandle;
 
 class SkillRocker :public Rocker
 {
@@ -154,11 +162,11 @@ protected:
 
 	void OnCDReady();
 
-	SkillRockerCallBackHandle OnCDStartCallBack;
+	SkillRockerCallBackHandle OnCDStartCallBack = [](SkillInfo*) {};
 
-	SkillRockerCallBackHandle OnSkillTrigerCallBack;
+	SkillRockerCallBackHandle OnSkillTrigerCallBack = [](SkillInfo*) {};
 
-	void OnSkillTriger(void * skillInfo);
+	void OnSkillTriger(SkillInfo * skillInfo);
 
 
 

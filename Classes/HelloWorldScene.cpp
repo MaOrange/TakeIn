@@ -58,6 +58,12 @@ bool HelloWorld::init()
 	button3 -> setPosition(0,+100);
 
 
+	//test SKillRocker
+	newSkill = SkillRocker::createWith("");
+
+	newSkill->setPosition(Vec2(size.width*0.75,size.height*0.5));
+
+	this->addChild(newSkill,5);
 
     return true;
 }

@@ -21,7 +21,7 @@ Rocker* Rocker::createWith(const char * rockerDotName, const char * rockerBgName
 	}
 }
 
-void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
+bool Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 {
 	size = Director::getInstance()->getVisibleSize();
 
@@ -99,6 +99,8 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 		->addEventListenerWithSceneGraphPriority(newListener, _rockerDot);//this
 
 	D = bg->getContentSize().width;
+
+	return true;
 }
 
 float Rocker::getDiretionByRad() const
@@ -189,7 +191,7 @@ void Rocker::onTouchMovedCB(Touch * touch, Event * event)
 	//rockerStart->setOpacity(0);
 	if (_rockerStart->getOpacity()!=0 && _rockerStart->getNumberOfRunningActions() == 0)
 	{
-		_rockerStart->runAction(FadeTo::create(0.1, 0));
+		_rockerStart->runAction(FadeTo::create(0.1f, 0));
 	}
 
 
@@ -205,10 +207,10 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 	_rockerBg->setOpacity(90);//bg is already 
 
 	//rockerDir->setOpacity(0);
-	_rockerDir->runAction(FadeTo::create(0.2, 0));
+	_rockerDir->runAction(FadeTo::create(0.2f, 0));
 
 	//rockerStart->setOpacity(0);
-	_rockerStart->runAction(FadeTo::create(0.1,0));
+	_rockerStart->runAction(FadeTo::create(0.1f,0));
 
 	_rockerDot->setPosition(Point::ZERO);
 
@@ -268,11 +270,11 @@ SkillRocker* SkillRocker::createWith(const char * fileName)
 
 bool SkillRocker::initWith(const char * fileName)
 {
-	if (!Rocker::init())
+	if (!Rocker::initWith(_ROCKER,_ROCKERBG))
 	{
 		return false;
 	}
-	//got a rocker, going to modify the rokcer into skill rocker
+	//got a rocker, going to modify the rocker into skill rocker
 	//DOt
 	this->_rockerDot->setVisible(false);
 	this->_rockerBg->setVisible(false);
@@ -296,8 +298,8 @@ bool SkillRocker::initWith(const char * fileName)
 	if (!_cancel)
 	{
 		_cancel = Sprite::create(_CANCEL);
-		_cancel->setPosition(Vec2(_CANCEL_X, _CANCEL_Y));
-		_cancel->setGlobalZOrder(100);//
+		_cancel->setPosition(Vec2(0,190));
+		//_cancel->setGlobalZOrder();//
 		_cancel->setVisible(false);
 		this->addChild(_cancel);
 	} 
@@ -318,15 +320,19 @@ bool SkillRocker::getIsNoPower()
 bool SkillRocker::onTouchBeginCB(Touch * touch, Event * event)
 {
 	//relative location
-	auto delataLocation = _rockerDot->convertToNodeSpace(touch->getLocation());
+	auto delataLocation = this->convertToNodeSpace(touch->getLocation());
 
-	Size s = _rockerDot->getContentSize();
+	Size s = _CDDemostrate->getContentSize();
 
-	Rect rect = Rect(0, 0, s.width, s.height);
+	Rect rect = Rect(-s.width/2, -s.height/2, s.width, s.height);
 
 	if (rect.containsPoint(delataLocation) && isEnable && !isNoPower)
 	{
 		_rockerDot->setVisible(true);
+
+		_rockerDot->setPosition(delataLocation);
+
+		_cancel->setVisible(true);
 
 		CCLOG("SkillRocker::onTouchBegin returned true! location:%d",delataLocation);
 
@@ -359,27 +365,32 @@ void SkillRocker::onTouchEndedCB(Touch * touch, Event * event)
 	}
 	else//skill didn't cancel
 	{
-		_rockerDot->setVisible(false);
-
-		_rockerDot->setPosition(Point::ZERO);
-
 		deltaPrev = delta;
 
-		OnSkillTriger(&deltaPrev);
+		//to generate skillInfo
+		SkillInfo * newInfo = new SkillInfo;
 
-		//inherit
-		delta = Vec2::ZERO;
-		if (rockerOnChange)
-		{
-			rockerOnChange(delta);
-		}
+		OnSkillTriger(newInfo);
+
+		delete newInfo;
 		
 	}
 
+	_rockerDot->setVisible(false);
 
+	_rockerDot->setPosition(Point::ZERO);
+
+	_cancel->setVisible(false);
+
+	//inherit
+	delta = Vec2::ZERO;
+	if (rockerOnChange)
+	{
+		rockerOnChange(delta);
+	}
 }
 
-void SkillRocker::OnSkillTriger(void * skillInfo)
+void SkillRocker::OnSkillTriger(SkillInfo * skillInfo)
 {
 	OnSkillTrigerCallBack(skillInfo);
 	//other thing to handle
