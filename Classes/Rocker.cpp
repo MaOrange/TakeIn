@@ -290,7 +290,7 @@ bool SkillRocker::initWith(const char * fileName)
 	_CDDemostrate->setEnabled(false);
 	_CDDemostrate->setMinimumValue(0);
 	_CDDemostrate->setMaximumValue(1);
-	_CDDemostrate->setValue(1);//init the cd ready 
+	_CDDemostrate->setValue(0.75);//init the cd ready 
 	_CDDemostrate->setPosition(Point::ZERO);
 	this->addChild(_CDDemostrate);
 
