@@ -283,6 +283,7 @@ bool SkillRocker::initWith(const char * fileName)
 	_CDIndicator = Sprite::create(_CDINDICATOR);
 	_CDIndicator->setVisible(false);
 	_CDIndicator->setPosition(Point::ZERO);
+	_CDIndicator->setAnchorPoint(Vec2(0.5f,0.0f));
 	this->addChild(_CDIndicator,5);
 
 	//
@@ -317,6 +318,62 @@ bool SkillRocker::getIsNoPower()
 	return isNoPower;
 }
 
+void SkillRocker::CDStart(float CDtime)
+{
+	CD = CDtime;
+	CDPassed = 0;
+	isCD = true;
+	_CDDemostrate->setValue(0);
+	_CDDemostrate->setMaximumValue(CDtime);
+
+	_CDIndicator->setVisible(true);
+	_CDIndicator->setRotation(0.0f);
+
+
+	schedule(schedule_selector(SkillRocker::CDUpdate),1.0f/60);
+}
+
+void SkillRocker::CDReadySynchronize()
+{
+	_CDIndicator->setVisible(false);
+
+	isCD = false;
+
+	//CD ready effect particle
+
+	//////////////////////////
+
+	CD = 0;
+
+	CDPassed = 0;
+
+	_CDDemostrate->setValue(_CDDemostrate->getMaximumValue());
+	unschedule(schedule_selector(SkillRocker::CDUpdate));
+}
+
+void SkillRocker::CDAdvance(float time)
+{
+	CDPassed += time;
+
+	CDUpdate(0.0f);
+}
+
+void SkillRocker::CDUpdate(float dt)
+{
+	CDPassed += dt;
+
+	_CDDemostrate->setValue(CDPassed);
+
+	_CDIndicator->setRotation(CDPassed/CD*360);
+
+	if (CDPassed>=CD)//CD already finished
+	{
+		_CDIndicator->setRotation(0.0f);
+		unschedule(schedule_selector(SkillRocker::CDUpdate));
+	}
+
+}
+
 bool SkillRocker::onTouchBeginCB(Touch * touch, Event * event)
 {
 	//relative location
@@ -326,7 +383,7 @@ bool SkillRocker::onTouchBeginCB(Touch * touch, Event * event)
 
 	Rect rect = Rect(-s.width/2, -s.height/2, s.width, s.height);
 
-	if (rect.containsPoint(delataLocation) && isEnable && !isNoPower)
+	if (rect.containsPoint(delataLocation) && isEnable && !isNoPower && !isCD)
 	{
 		_rockerDot->setVisible(true);
 
@@ -389,6 +446,7 @@ void SkillRocker::onTouchEndedCB(Touch * touch, Event * event)
 		rockerOnChange(delta);
 	}
 }
+
 
 void SkillRocker::OnSkillTriger(SkillInfo * skillInfo)
 {

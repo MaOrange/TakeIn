@@ -127,9 +127,11 @@ public:
 
 	void CDStart(float CDtime);
 
-	void CDUPdate();
+	void CDReadySynchronize();//to synchronize the cd progress in skillRocker and hero
 
 	void CDPassCallBack();
+
+	void CDUpdate(float dt);
 
 	void CDAdvance(float time);
 
@@ -137,14 +139,13 @@ public:
 
 	Vec2 deltaPrev;//to save the prev delta value to be passed by ptr to skillInfo
 
+	SkillRockerCallBackHandle OnSkillTrigerCallBack = [](SkillInfo*) {};
 protected:
 	float CD=0;
 
 	float CDPassed=0;
 
 	bool isCD=false;
-
-	void CDUpdate();
 
 	bool isEnable=true;
 
@@ -160,15 +161,14 @@ protected:
 
 	virtual void onTouchEndedCB(Touch * touch, Event * event)override;
 
-	void OnCDReady();
-
 	SkillRockerCallBackHandle OnCDStartCallBack = [](SkillInfo*) {};
 
-	SkillRockerCallBackHandle OnSkillTrigerCallBack = [](SkillInfo*) {};
+	
 
 	void OnSkillTriger(SkillInfo * skillInfo);
 
-
+	//for cd progress
+	
 
 };
 

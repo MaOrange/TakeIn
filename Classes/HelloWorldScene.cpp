@@ -63,7 +63,37 @@ bool HelloWorld::init()
 
 	newSkill->setPosition(Vec2(size.width*0.75,size.height*0.5));
 
+	newSkill->OnSkillTrigerCallBack = CC_CALLBACK_1(HelloWorld::SKillCB,this);
+
 	this->addChild(newSkill,5);
+
+	//keyboard listener
+	EventListenerKeyboard* listener = EventListenerKeyboard::create();
+
+	listener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event * event) 
+	{
+		switch (keyCode)
+		{
+		case cocos2d::EventKeyboard::KeyCode::KEY_C:
+			//cd start
+			newSkill->CDStart(10);
+			break;
+
+		case cocos2d::EventKeyboard::KeyCode::KEY_R:
+			//cd ready synchronize
+			newSkill->CDReadySynchronize();
+			break;
+
+		case cocos2d::EventKeyboard::KeyCode::KEY_A:
+			newSkill->CDAdvance(2.0f);
+			break;
+
+		default:
+			break;
+		}
+	};
+
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
     return true;
 }
@@ -95,6 +125,16 @@ void HelloWorld::MenuCB(Ref * sender)
 void HelloWorld::rockerCB(Vec2 & rockerInfo)
 {
 	CCLOG("rockerCB: angle:%f  length:%f",rockerInfo.getAngle(),rockerInfo.getLength());
+}
+
+void HelloWorld::SKillCB(SkillInfo * skillInfo)
+{
+	CCLOG("SkillCB: Vec.length()=%f, Vec.angle()=%f",skillInfo->direction.getLength(), skillInfo->direction.getAngle());
+
+	newSkill->CDStart(10);
+
+	scheduleOnce([=](float dt) {newSkill->CDReadySynchronize(); }
+	, 10.0f,"key");
 }
 
 

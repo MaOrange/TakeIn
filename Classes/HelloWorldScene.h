@@ -17,6 +17,9 @@ public:
 
 	void rockerCB(Vec2 & rockerInfo);
 
+	void SKillCB(SkillInfo * skillInfo);
+
+
 protected:
 	Rocker * newNode;
 
