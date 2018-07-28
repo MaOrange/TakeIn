@@ -43,12 +43,6 @@ public:
 
 	float getDirectionByTheta() const;//return the direction in normal system in the unit of degree
 
-	Vec2 getRockerPosition() const; //return the origin location of the rocker
-
-	void setRockerPosition(Vec2);//set the RockerPosition with Vec2
-
-	void setRockerPosition(float, float);//set the RockerPosition with two int
-
 	void setEnabled(bool);
 
 	bool getEnabled()const;
@@ -87,10 +81,6 @@ protected:
 	Sprite * _rockerDisabled;
 
 	int D;
-
-	float originX = 0.2;
-
-	float originY = 0.3;
 
 	Size size;
 

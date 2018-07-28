@@ -18,7 +18,7 @@ public:
 	void rockerCB(Vec2 & rockerInfo);
 
 protected:
-	Rocker * newLayer;
+	Rocker * newNode;
 
 	Size size;
 };

@@ -50,15 +50,15 @@ void Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 	_rockerDisabled = disabled;
 
 	//set position
-	dot->setPosition(Vec2(width*originX,height*originY));
+	dot->setPosition(Point::ZERO);
 
-	bg->setPosition(Vec2(width*originX, height*originY));
+	bg->setPosition(Point::ZERO);
 
-	direction->setPosition(Vec2(width*originX, height*originY));
+	direction->setPosition(Point::ZERO);
 
-	start->setPosition(Vec2(width*originX, height*originY));
+	start->setPosition(Point::ZERO);
 
-	disabled->setPosition(Vec2(width*originX, height*originY));
+	disabled->setPosition(Point::ZERO);
 
 	//set setOpacity
 	dot->setOpacity(180);
@@ -111,32 +111,6 @@ float Rocker::getDirectionByTheta() const
 	return CC_RADIANS_TO_DEGREES(angle);
 }
 
-Vec2 Rocker::getRockerPosition() const
-{
-	return Vec2(size.width*originX,size.height);
-}
-
-void Rocker::setRockerPosition(Vec2 newLocation)
-{
-	
-}
-
-void Rocker::setRockerPosition(float x,float y)
-{
-	originX = x;
-
-	originY = y;
-
-	_rockerBg->setPosition(Vec2(size.width*originX, size.height*originY));
-
-	_rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
-
-	_rockerDir->setPosition(Vec2(size.width*originX, size.height*originY));
-
-	_rockerStart->setPosition(Vec2(size.width*originX, size.height*originY));
-
-	_rockerDisabled->setPosition(Vec2(size.width*originX, size.height*originY));
-}
 
 void Rocker::setEnabled(bool able)
 {
@@ -236,7 +210,7 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 	//rockerStart->setOpacity(0);
 	_rockerStart->runAction(FadeTo::create(0.1,0));
 
-	_rockerDot->setPosition(Vec2(size.width*originX,size.height*originY));
+	_rockerDot->setPosition(Point::ZERO);
 
 
 	delta = Vec2::ZERO;
@@ -248,9 +222,7 @@ void Rocker::onTouchEndedCB(Touch * touch, Event * event)
 
 Vec2 Rocker::locationTranslate(const Vec2 & location)
 {
-	auto origin = Vec2(size.width*originX,size.height*originY);
-
-	delta = location- origin;
+	delta = this->convertToNodeSpace(location);
 
 	float dis = delta.length();
 	angle = delta.getAngle();
@@ -270,12 +242,10 @@ Vec2 Rocker::locationTranslate(const Vec2 & location)
 	}
 	else
 	{
-		return location;
+		return delta;
 	}
 
-	//auto newLocation = origin + delta;
-
-	return (origin + delta);
+	return (delta);
 }
 
 void Rocker::setCallBack(rockerOnChangeHandler handle)
@@ -391,7 +361,7 @@ void SkillRocker::onTouchEndedCB(Touch * touch, Event * event)
 	{
 		_rockerDot->setVisible(false);
 
-		_rockerDot->setPosition(Vec2(size.width*originX, size.height*originY));
+		_rockerDot->setPosition(Point::ZERO);
 
 		deltaPrev = delta;
 

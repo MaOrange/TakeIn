@@ -26,11 +26,13 @@ bool HelloWorld::init()
 
 	bg->setPosition(Vec2(size.width/2,size.height/2));
 
-	newLayer = Rocker::createWith("","");
+	newNode = Rocker::createWith("","");
 
-	newLayer->setCallBack(std::bind(&HelloWorld::rockerCB, this, std::placeholders::_1));
+	newNode->setPosition(Vec2(size.width*0.2,size.height*0.3));
 
-	this->addChild(newLayer);
+	newNode->setCallBack(std::bind(&HelloWorld::rockerCB, this, std::placeholders::_1));
+
+	this->addChild(newNode);
 
 	this->addChild(bgLayer,-1);
 
@@ -67,15 +69,15 @@ void HelloWorld::MenuCB(Ref * sender)
 	switch (ptr->getTag())
 	{
 	case 1:
-		newLayer->setEnabled(false);
+		newNode->setEnabled(false);
 		break;
 
 	case 2:
-		newLayer->setEnabled(true);
+		newNode->setEnabled(true);
 		break;
 
 	case 3:
-		newLayer->setRockerPosition(CCRANDOM_0_1(),CCRANDOM_0_1());
+		newNode->setPosition(CCRANDOM_0_1()*size.width,CCRANDOM_0_1()*size.height);
 		break;
 
 	default:
