@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 #include "Rocker.h"
-
+#include "SkillRocker.h"
 
 
 class HelloWorld : public cocos2d::Layer
