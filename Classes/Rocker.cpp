@@ -1,4 +1,4 @@
-#include "Rocker.h"
+﻿#include "Rocker.h"
 
 Sprite* SkillRocker::_cancel = nullptr;
 
@@ -279,6 +279,11 @@ bool SkillRocker::initWith(const char * fileName)
 	this->_rockerDot->setVisible(false);
 	this->_rockerBg->setVisible(false);
 
+	//_skillOutLine
+	_skillOutLine = Sprite::create(_SKILLOUTLINE);
+	_skillOutLine->setPosition(Point::ZERO);
+	this->addChild(_skillOutLine,4);
+
 	//_CDIndicator
 	_CDIndicator = Sprite::create(_CDINDICATOR);
 	_CDIndicator->setVisible(false);
@@ -286,14 +291,26 @@ bool SkillRocker::initWith(const char * fileName)
 	_CDIndicator->setAnchorPoint(Vec2(0.5f,0.0f));
 	this->addChild(_CDIndicator,5);
 
-	//
+	//_CDDemostrate
 	_CDDemostrate = ControlPotentiometer::create(_SKILLCD,_SKILLICON,"null.png");
 	_CDDemostrate->setEnabled(false);
 	_CDDemostrate->setMinimumValue(0);
 	_CDDemostrate->setMaximumValue(1);
 	_CDDemostrate->setValue(0.75);//init the cd ready 
 	_CDDemostrate->setPosition(Point::ZERO);
-	this->addChild(_CDDemostrate);
+	this->addChild(_CDDemostrate,3);
+
+	//_SKillDisabled
+	_skillDisabled = Sprite::create(_SKILLDISABLED);
+	_skillDisabled->setPosition(Point::ZERO);
+	_skillDisabled->setVisible(false);
+	this->addChild(_skillDisabled);
+
+	//_CDLabel
+	_CDLabel = Label::create();
+	_CDLabel->setSystemFontSize(50);
+	_CDLabel->setVisible(false);
+	this->addChild(_CDLabel,7);
 
 	//Class level init static _cancel  single instance
 	if (!_cancel)
@@ -306,6 +323,22 @@ bool SkillRocker::initWith(const char * fileName)
 	} 
 	
 	return true;
+}
+
+void SkillRocker::setIsEnable(bool value)
+{
+	if (isEnable && !value)//change from true to false
+	{
+		isEnable = value;
+		
+		_skillDisabled->setVisible(true);
+	}
+	else if (!isEnable && value)//change from false to true
+	{
+		isEnable = value;
+
+		_skillDisabled->setVisible(false);
+	}
 }
 
 bool SkillRocker::getIsEnable()
@@ -329,6 +362,8 @@ void SkillRocker::CDStart(float CDtime)
 	_CDIndicator->setVisible(true);
 	_CDIndicator->setRotation(0.0f);
 
+	_CDLabel->setVisible(true);
+	_CDLabel->setString(String::createWithFormat("%i", (int)floor(CD))->getCString());
 
 	schedule(schedule_selector(SkillRocker::CDUpdate),1.0f/60);
 }
@@ -349,6 +384,8 @@ void SkillRocker::CDReadySynchronize()
 
 	_CDDemostrate->setValue(_CDDemostrate->getMaximumValue());
 	unschedule(schedule_selector(SkillRocker::CDUpdate));
+
+	_CDLabel->setVisible(false);
 }
 
 void SkillRocker::CDAdvance(float time)
@@ -365,6 +402,26 @@ void SkillRocker::CDUpdate(float dt)
 	_CDDemostrate->setValue(CDPassed);
 
 	_CDIndicator->setRotation(CDPassed/CD*360);
+
+	float left = (CD - CDPassed);
+
+	
+	if (left<0)
+	{
+		_CDLabel->setString(String::createWithFormat("0.0")->getCString());
+	}
+	else if (left<=1.0f)
+	{
+		left = floor(left*10)/10;
+		_CDLabel->setString(String::createWithFormat("%.1f", left)->getCString());
+	} 
+	else 
+	{
+		_CDLabel->setString(String::createWithFormat("%i", (int)left)->getCString());
+	}
+	
+
+	
 
 	if (CDPassed>=CD)//CD already finished
 	{

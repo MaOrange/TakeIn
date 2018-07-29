@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 
 
@@ -11,11 +11,15 @@ USING_NS_CC;
 #define _ROCKER "rocker.png"
 #define _ROCKERBG "rockerBG.png"
 #define _ROCKERDIR "rockerDir.png"
-#define _ROCKERDISABELD "rockerDisabled.png"
+#define _ROCKERDISABLED "rockerDisabled.png"
 #define _ROCKERSTART "rockerStart.png"
 #define _SKILLICON "SKillIcon.png"
 #define _SKILLCD "SkillCD.png"
+#define _SKILLOUTLINE "skillOutLine.png"
 #define _CDINDICATOR "CDIndicator.png"
+
+
+#define  _SKILLDISABLED "skillDisabled.png"
 
 #define _CANCEL "cancel.png"
 #define  _CANCEL_X 0.8f
@@ -119,7 +123,7 @@ public:
 
 	bool initWith(const char * fileName);
 
-	void setIsEnable();
+	void setIsEnable(bool value);
 	bool getIsEnable();
 
 	void setIsNoPower();
@@ -155,6 +159,12 @@ protected:
 
 	ControlPotentiometer* _CDDemostrate;
 
+	Sprite* _skillDisabled;
+
+	Sprite * _skillOutLine;
+
+	Label* _CDLabel;
+
 	virtual bool onTouchBeginCB(Touch * touch, Event * event)override;
 
 	virtual void onTouchMovedCB(Touch * touch, Event * event)override;
@@ -162,8 +172,6 @@ protected:
 	virtual void onTouchEndedCB(Touch * touch, Event * event)override;
 
 	SkillRockerCallBackHandle OnCDStartCallBack = [](SkillInfo*) {};
-
-	
 
 	void OnSkillTriger(SkillInfo * skillInfo);
 

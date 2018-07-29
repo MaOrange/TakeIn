@@ -65,6 +65,8 @@ bool HelloWorld::init()
 
 	newSkill->OnSkillTrigerCallBack = CC_CALLBACK_1(HelloWorld::SKillCB,this);
 
+	newSkill->setScale(0.5);
+
 	this->addChild(newSkill,5);
 
 	//keyboard listener
@@ -86,6 +88,11 @@ bool HelloWorld::init()
 
 		case cocos2d::EventKeyboard::KeyCode::KEY_A:
 			newSkill->CDAdvance(2.0f);
+			break;
+
+		case cocos2d::EventKeyboard::KeyCode::KEY_D:
+
+			newSkill->setIsEnable(!newSkill->getIsEnable());
 			break;
 
 		default:
