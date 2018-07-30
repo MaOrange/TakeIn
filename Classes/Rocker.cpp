@@ -9,7 +9,7 @@ Rocker* Rocker::createWith(const char * rockerDotName, const char * rockerBgName
 	Rocker * newRocker = Rocker::create();
 	if (newRocker)
 	{
-		newRocker->initWith("Rocker.png", "RockerBG.png");
+		newRocker->initWith(_ROCKER, _ROCKERBG);
 		return newRocker;
 	}
 	else 
@@ -35,15 +35,15 @@ bool Rocker::initWith(const char * rockerDotName, const char * rockerBgName)
 
 	_rockerBg = bg;
 
-	Sprite * direction = Sprite::create("rockerDir.png");
+	Sprite * direction = Sprite::create(_ROCKERDIR);
 
 	_rockerDir = direction;
 
-	Sprite * start = Sprite::create("rockerStart.png");
+	Sprite * start = Sprite::create(_ROCKERSTART);
 
 	_rockerStart = start;
 
-	Sprite * disabled = Sprite::create("rockerDisabled.png");
+	Sprite * disabled = Sprite::create(_ROCKERDISABLED);
 
 	_rockerDisabled = disabled;
 

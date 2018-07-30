@@ -2,7 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
-#include "Rocker.h"
+//#include "Rocker.h"
 #include "SkillRocker.h"
 
 

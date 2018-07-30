@@ -1,8 +1,8 @@
 #pragma once
 #include"Rocker.h"
 
-#include "cocos-ext.h"
-USING_NS_CC_EXT;
+//#include "cocos-ext.h"
+//USING_NS_CC_EXT;
 
 #ifndef SKILLROCKER
 #define SKILLROCKER
@@ -16,7 +16,7 @@ public:
 
 	static SkillRocker* createWith(const char * fileName);
 
-	bool initWith(const char * fileName);
+	virtual bool initWith(const char * fileName);
 
 	void setIsEnable(bool value);
 	bool getIsEnable();
@@ -52,7 +52,7 @@ protected:
 
 	Sprite* _CDIndicator;
 
-	ControlPotentiometer* _CDDemostrate;
+	//ControlPotentiometer* _CDDemostrate;
 
 	Sprite* _skillDisabled;
 
