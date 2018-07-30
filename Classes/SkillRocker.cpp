@@ -110,7 +110,7 @@ void SkillRocker::CDStart(float CDtime)
 	_CDIndicator->setRotation(0.0f);
 
 	_CDLabel->setVisible(true);
-	_CDLabel->setString(String::createWithFormat("%i", (int)floor(CD))->getCString());
+	_CDLabel->setString(String::createWithFormat("%i", (int)CD)->getCString());
 
 	schedule(schedule_selector(SkillRocker::CDUpdate), 1.0f / 60);
 }
@@ -159,7 +159,6 @@ void SkillRocker::CDUpdate(float dt)
 	}
 	else if (left <= 1.0f)
 	{
-		left = floor(left * 10) / 10;
 		_CDLabel->setString(String::createWithFormat("%.1f", left)->getCString());
 	}
 	else
@@ -195,7 +194,7 @@ bool SkillRocker::onTouchBeginCB(Touch * touch, Event * event)
 
 		_cancel->setVisible(true);
 
-		CCLOG("SkillRocker::onTouchBegin returned true! location:%d", delataLocation);
+		//CCLOG("SkillRocker::onTouchBegin returned true! location:%d", delataLocation);
 
 		return true;
 	}
