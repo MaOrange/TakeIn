@@ -21,7 +21,7 @@ public:
 	void setIsEnable(bool value);
 	bool getIsEnable();
 
-	void setIsNoPower();
+	void setIsNoPower(bool value);
 	bool getIsNoPower();
 
 	void CDStart(float CDtime);
@@ -55,6 +55,8 @@ protected:
 	ControlPotentiometer* _CDDemostrate;
 
 	Sprite* _skillDisabled;
+
+	Sprite* _skillNoPower;
 
 	Sprite * _skillOutLine;
 

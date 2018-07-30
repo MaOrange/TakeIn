@@ -95,6 +95,11 @@ bool HelloWorld::init()
 			newSkill->setIsEnable(!newSkill->getIsEnable());
 			break;
 
+		case cocos2d::EventKeyboard::KeyCode::KEY_N:
+			newSkill->setIsNoPower(!newSkill->getIsNoPower());
+			break;
+
+
 		default:
 			break;
 		}

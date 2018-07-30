@@ -51,7 +51,13 @@ bool SkillRocker::initWith(const char * fileName)
 	_skillDisabled = Sprite::create(_SKILLDISABLED);
 	_skillDisabled->setPosition(Point::ZERO);
 	_skillDisabled->setVisible(false);
-	this->addChild(_skillDisabled);
+	this->addChild(_skillDisabled,6);
+
+	//_skillNoPower
+	_skillNoPower = Sprite::create(_SKILLNOPOWER);
+	_skillNoPower->setVisible(false);
+	_skillNoPower->setPosition(Point::ZERO);
+	this->addChild(_skillNoPower,4);
 
 	//_CDLabel
 	_CDLabel = Label::createWithSystemFont("","",50);
@@ -91,6 +97,15 @@ void SkillRocker::setIsEnable(bool value)
 bool SkillRocker::getIsEnable()
 {
 	return isEnable;
+}
+
+void SkillRocker::setIsNoPower(bool value)
+{
+	if (value!=isNoPower)
+	{
+		isNoPower = value;
+		_skillNoPower->setVisible(value);
+	}
 }
 
 bool SkillRocker::getIsNoPower()

@@ -14,7 +14,7 @@ USING_NS_CC;
 #define _ROCKERDIR "RockerResources/rockerDir.png"
 #define _ROCKERDISABLED "RockerResources/rockerDisabled.png"
 #define _ROCKERSTART "RockerResources/rockerStart.png"
-#define _SKILLICON "RockerResources/SKillIcon.png"
+#define _SKILLICON "RockerResources/SkillIcon.png"
 #define _SKILLCD "RockerResources/SkillCD.png"
 #define _SKILLOUTLINE "RockerResources/skillOutLine.png"
 #define _CDINDICATOR "RockerResources/CDIndicator.png"
@@ -22,6 +22,7 @@ USING_NS_CC;
 #define NULLTEXTURE "RockerResources/null.png"
 
 #define  _SKILLDISABLED "RockerResources/skillDisabled.png"
+#define _SKILLNOPOWER "RockerResources/SkillNoPower.png"
 
 #define _CANCEL "RockerResources/cancel.png"
 #define  _CANCEL_X 0.8f
