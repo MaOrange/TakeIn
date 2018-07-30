@@ -19,6 +19,7 @@ USING_NS_CC;
 #define _SKILLOUTLINE "RockerResources/skillOutLine.png"
 #define _CDINDICATOR "RockerResources/CDIndicator.png"
 
+#define NULLTEXTURE "RockerResources/null.png"
 
 #define  _SKILLDISABLED "RockerResources/skillDisabled.png"
 

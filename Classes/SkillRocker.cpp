@@ -39,13 +39,13 @@ bool SkillRocker::initWith(const char * fileName)
 	this->addChild(_CDIndicator, 5);
 
 	//_CDDemostrate
-	//_CDDemostrate = ControlPotentiometer::create(_SKILLCD, _SKILLICON, "null.png");
-	//_CDDemostrate->setEnabled(false);
-	//_CDDemostrate->setMinimumValue(0);
-	//_CDDemostrate->setMaximumValue(1);
-	//_CDDemostrate->setValue(0.75);//init the CD ready 
-	//_CDDemostrate->setPosition(Point::ZERO);
-	//this->addChild(_CDDemostrate, 3);
+	_CDDemostrate = ControlPotentiometer::create(_SKILLCD, _SKILLICON,NULLTEXTURE);
+	_CDDemostrate->setEnabled(false);
+	_CDDemostrate->setMinimumValue(0);
+	_CDDemostrate->setMaximumValue(1);
+	_CDDemostrate->setValue(0.75);//init the CD ready 
+	_CDDemostrate->setPosition(Point::ZERO);
+	this->addChild(_CDDemostrate, 3);
 
 	//_SKillDisabled
 	_skillDisabled = Sprite::create(_SKILLDISABLED);
@@ -103,8 +103,8 @@ void SkillRocker::CDStart(float CDtime)
 	CD = CDtime;
 	CDPassed = 0;
 	isCD = true;
-	/*_CDDemostrate->setValue(0);
-	_CDDemostrate->setMaximumValue(CDtime);*/
+	_CDDemostrate->setValue(0);
+	_CDDemostrate->setMaximumValue(CDtime);
 
 	_CDIndicator->setVisible(true);
 	_CDIndicator->setRotation(0.0f);
@@ -129,7 +129,7 @@ void SkillRocker::CDReadySynchronize()
 
 	CDPassed = 0;
 
-	//_CDDemostrate->setValue(_CDDemostrate->getMaximumValue());
+	_CDDemostrate->setValue(_CDDemostrate->getMaximumValue());
 	unschedule(schedule_selector(SkillRocker::CDUpdate));
 
 	_CDLabel->setVisible(false);
@@ -146,7 +146,7 @@ void SkillRocker::CDUpdate(float dt)
 {
 	CDPassed += dt;
 
-	//_CDDemostrate->setValue(CDPassed);
+	_CDDemostrate->setValue(CDPassed);
 
 	_CDIndicator->setRotation(CDPassed / CD * 360);
 
@@ -182,11 +182,11 @@ bool SkillRocker::onTouchBeginCB(Touch * touch, Event * event)
 	//relative location
 	auto delataLocation = this->convertToNodeSpace(touch->getLocation());
 
-	//Size s = _CDDemostrate->getContentSize();
+	Size s = _CDDemostrate->getContentSize();
 
-	//Rect rect = Rect(-s.width / 2, -s.height / 2, s.width, s.height);
+	Rect rect = Rect(-s.width / 2, -s.height / 2, s.width, s.height);
 
-	if (/*rect.containsPoint(delataLocation) &&*/ isEnable && !isNoPower && !isCD)
+	if (rect.containsPoint(delataLocation) && isEnable && !isNoPower && !isCD)
 	{
 		_rockerDot->setVisible(true);
 
